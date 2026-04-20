@@ -1,0 +1,28 @@
+# Arduino build artifacts
+*.o
+*.a
+*.so
+*.elf
+*.map
+*.hex
+*.bin
+*.lst
+*.d
+*.eep
+
+# Arduino IDE / CLI temp outputs
+build/
+debug/
+Release/
+Debug/
+*.tmp
+*.log
+
+# VS Code / OS noise
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local credentials (never commit)
+water_monitor/secrets.h
