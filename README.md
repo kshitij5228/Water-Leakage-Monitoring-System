@@ -18,7 +18,7 @@ An ESP32 + Blynk based smart project for real-time flow monitoring, leak safety,
 | Firmware | `water_monitor/water_monitor.ino` |
 | Secrets Template | `water_monitor/secrets.example.h` |
 | Local Secrets (ignored) | `water_monitor/secrets.h` |
-| Wiring Guide | `CONNECTION_BABY_STEPS.md` |
+| Wiring Guide | `CONNECTION_STEPS.md` |
 | Pin Reference | `pin_config.h` |
 
 ## Core Features
