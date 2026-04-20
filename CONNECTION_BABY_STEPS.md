@@ -1,101 +1,137 @@
-# Water Monitor Connection Guide (Baby Steps)
+# Water Monitor Connection Guide (Step by Step)
 
-## 0. Pehle Safety
-- Main power OFF rakho jab tak wiring complete na ho.
-- Agar motor AC mains par hai, insulated relay module aur proper rated wiring use karo.
-- ESP32 ko motor line se direct mat jodo.
+A clean wiring guide for quick setup, safe testing, and smooth demo.
 
-## 1. Jo Components Abhi Code Me Hain
-- ESP32 board
-- 2 flow sensors
-- 1 relay module (motor control)
-- 1 pump motor
-- 1 buzzer
-- WiFi + Blynk app
+## 1. Before You Start (Safety First)
 
-## 2. ESP32 Pin Map (Current Code)
-- Flow Sensor 1 signal pin -> GPIO 27
-- Flow Sensor 2 signal pin -> GPIO 26
-- Relay IN -> GPIO 25
-- Buzzer signal -> GPIO 32
-- TDS input (reserved) -> GPIO 34
-- Water level input (reserved) -> GPIO 33
+- Keep main AC power OFF while wiring.
+- Do not connect ESP32 pins directly to AC lines.
+- Use proper relay module with correct current rating.
+- Keep low-voltage wiring (ESP32 side) physically separate from mains wiring.
 
-## 3. Common Ground Rule (Bahut Important)
-- ESP32 GND, relay GND, dono flow sensors GND, buzzer GND ko common ground do.
-- Agar ground common nahi hoga to readings random aa sakti hain.
+## 2. Components Required
 
-## 4. Flow Sensor 1 Wiring (Inlet)
-- Flow sensor VCC -> 5V (ya sensor spec ke hisab se)
-- Flow sensor GND -> GND
-- Flow sensor signal -> ESP32 GPIO 27
+- ESP32 development board
+- 2 x Flow sensors (inlet and outlet)
+- 1 x Relay module
+- 1 x Water pump / motor
+- 1 x TDS sensor module
+- 1 x Water level sensor
+- 1 x Buzzer
+- Jumper wires + stable power supply
 
-## 5. Flow Sensor 2 Wiring (Outlet)
-- Flow sensor VCC -> 5V (ya sensor spec ke hisab se)
-- Flow sensor GND -> GND
-- Flow sensor signal -> ESP32 GPIO 26
+## 3. ESP32 Pin Mapping
 
-## 6. Relay Wiring (Motor Control)
+| Function | ESP32 Pin |
+|---|---|
+| Flow Sensor 1 (Inlet) | GPIO 27 |
+| Flow Sensor 2 (Outlet) | GPIO 26 |
+| Relay IN (Motor Control) | GPIO 25 |
+| TDS Analog Input | GPIO 34 |
+| Water Level Input | GPIO 33 |
+| Buzzer Signal | GPIO 32 |
+
+## 4. Common Ground Rule (Very Important)
+
+Connect all low-voltage grounds together:
+
+- ESP32 GND
+- Relay module GND
+- Flow Sensor 1 GND
+- Flow Sensor 2 GND
+- TDS module GND
+- Water level sensor GND
+- Buzzer negative / GND
+
+Without common ground, readings become unstable or random.
+
+## 5. Sensor Wiring
+
+### 5.1 Flow Sensor 1 (Inlet)
+
+- VCC -> 5V (as per sensor spec)
+- GND -> GND
+- Signal -> GPIO 27
+
+### 5.2 Flow Sensor 2 (Outlet)
+
+- VCC -> 5V (as per sensor spec)
+- GND -> GND
+- Signal -> GPIO 26
+
+### 5.3 TDS Sensor
+
+- VCC -> 3.3V or module recommended voltage
+- GND -> GND
+- Analog Output -> GPIO 34
+
+### 5.4 Water Level Sensor
+
+- VCC -> 3.3V / 5V (as per module)
+- GND -> GND
+- Signal -> GPIO 33
+
+## 6. Relay and Motor Wiring
+
+### Relay Control Side (Low Voltage)
+
 - Relay VCC -> 5V
 - Relay GND -> GND
-- Relay IN -> ESP32 GPIO 25
+- Relay IN -> GPIO 25
 
-## 6A. Agar Motor Direct Socket Se Chalta Hai
-- Haan, same motor ko relay se bhi control kiya ja sakta hai.
-- Relay ko mains ke sirf live wire ko switch karne do.
-- Neutral wire motor tak direct ja sakti hai.
-- Earth wire agar available ho to motor body/earth point par do.
-- ESP32 side aur mains side ko physically alag rakho.
-- Relay contacts ke liye current rating motor ke hisab se hona chahiye.
+### Motor Power Side (AC Mains)
 
-## 7. Motor Power Line Relay Ke Through
-- AC mains demo me:
-- Mains live -> Relay COM
-- Relay NO -> Motor live input
-- Mains neutral -> Motor neutral
-- Earth -> Motor body/earth point
-- Is tarah relay ON hoga to motor ko mains supply milegi.
+- Mains Live -> Relay COM
+- Relay NO -> Motor Live
+- Mains Neutral -> Motor Neutral
+- Earth -> Motor body (if available)
 
-## 7A. Baby Step Demo Order
-1. Pehle motor ko direct socket par chala kar confirm karo ki motor healthy hai.
-2. Phir socket ka live wire relay COM/NO se pass karo.
-3. Relay VCC/GND/IN ko ESP32 se jodo.
-4. Blynk me V5 ON karke motor start test karo.
-5. Leak simulate karke check karo ki motor OFF ho rahi hai ya nahi.
+Use only insulated terminals and proper safety practice.
 
-## 8. Buzzer Wiring
-- Buzzer + -> ESP32 GPIO 32
+## 7. Buzzer Wiring
+
+- Buzzer + -> GPIO 32
 - Buzzer - -> GND
 
-## 9. Blynk Datastream Mapping
-- V0 -> Flow 1 rate
-- V1 -> Flow 2 rate
-- V3 -> Leakage status (0/1)
-- V4 -> Status message
-- V5 -> Motor command (Button/Switch)
-- V6 -> Motor state (LED/Display)
-- V8 -> Leak reset button
+## 8. Blynk Datastream Mapping
 
-## 10. Blynk Widget Setup (Baby Step)
-- Step 1: V5 par Button banao (0/1).
-- Step 2: V8 par Button banao (push mode suggested).
-- Step 3: V6 par LED ya value display.
-- Step 4: V0, V1 par value display widgets.
-- Step 5: V3 par indicator/LED.
-- Step 6: V4 par labeled value/message widget.
+| Datastream | Purpose |
+|---|---|
+| V0 | Flow Rate 1 |
+| V1 | Flow Rate 2 |
+| V2 | TDS Value |
+| V3 | Leakage Status |
+| V4 | Status Message |
+| V5 | Motor Command |
+| V6 | Motor State |
+| V7 | Water Level State |
+| V8 | Leak Reset |
 
-## 11. First Power-On Check
-- Serial monitor 115200 par kholo.
-- Flow 1 me pani do: V0 value badhni chahiye.
-- Flow 2 me pani do: V1 value badhni chahiye.
-- V5 ON karo: motor ON honi chahiye.
-- Leak condition aane par motor OFF latch honi chahiye.
-- V7 press karke leak latch reset check karo.
+## 9. First Demo Checklist
 
-## 12. Agar Motor ON Nahi Ho Rahi
-- Relay polarity check karo (active-low vs active-high).
-- Relay click sound aa raha hai ya nahi check karo.
-- COM/NO wiring dobara verify karo.
-- Motor supply voltage/capacity verify karo.
-- Common ground confirm karo.
-- AC mains demo me live wire relay se hi pass ho rahi hai ya nahi check karo.
+1. Power ON ESP32 and open Serial Monitor at 115200.
+2. Confirm WiFi and Blynk connection logs appear.
+3. Move water through inlet and verify Flow 1 updates.
+4. Move water through outlet and verify Flow 2 updates.
+5. Toggle V5 in Blynk and confirm motor ON/OFF.
+6. Simulate leak condition and check motor auto OFF + latch.
+7. Press V8 reset and verify motor can restart.
+8. Trigger water-level sensor and verify tank-full motor stop.
+
+## 10. Quick Troubleshooting
+
+- No relay action: check relay VCC/GND/IN and active-low behavior.
+- Random flow values: verify common ground and clean sensor wiring.
+- Motor not switching: recheck COM/NO mains connection.
+- Blynk not updating: verify template ID/name/token and internet access.
+- Reboots: use stable power supply; avoid USB brownout.
+
+## 11. Pro Wiring Tips (For Better Look)
+
+- Use color coding:
+- Red = VCC
+- Black = GND
+- Yellow/White = Signal
+- Bundle wires with zip ties for cleaner panel look.
+- Label each wire near ESP32 header for easy maintenance.
+- Keep a printed pin table near hardware setup.
