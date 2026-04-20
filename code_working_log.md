@@ -26,7 +26,7 @@
 ## Documentation Notes
 
 - `README.md` has project overview, setup steps, and GitHub push commands.
-- `CONNECTION_BABY_STEPS.md` has complete wiring map, safety rules, and test checklist.
+- `CONNECTION_STEPS.md` has complete wiring map, safety rules, and test checklist.
 
 ## Next Suggested Additions
 
